@@ -1,0 +1,16 @@
+---
+
+- name: Apache uninstallation playbook
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Uninstalling apache2 package
+      apt:
+        name: apache2 
+        state: absent
+
+    - name: Uninstall php module for the apache server
+      apt:
+        name: libapache2-mod-php
+        state: absent
