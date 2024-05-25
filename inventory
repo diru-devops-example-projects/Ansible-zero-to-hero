@@ -1,3 +1,4 @@
 192.168.111.128 		ansible_user=diru-server-1
 192.168.111.129 		ansible_user=diru-server-2
 192.168.111.130			ansible_user=diru-server-3
+192.168.111.131			ansible_user=diru-server-4
