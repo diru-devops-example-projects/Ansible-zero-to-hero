@@ -18,3 +18,8 @@
       service:
         name: apache2
         state: started
+
+    - name: Install php support for the apache server
+      apt:
+        name: libapache2-mod-php
+        state: latest
