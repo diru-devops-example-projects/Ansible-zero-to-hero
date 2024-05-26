@@ -7,3 +7,6 @@
 
 [file_servers]
 192.168.111.130		ansible_user=diru-server-3
+
+[workstation]
+192.168.111.130		ansible_user=diru-server-3
