@@ -3,7 +3,7 @@
 - name: Site playbook
   hosts: all
   become: true
-  tasks:
+  pre_tasks:
     - name: Install updates (CentOS)
       tags: always
       dnf:
@@ -74,3 +74,20 @@
       package:
           name: samba
           state: latest 
+
+- hosts: workstation
+  become: true
+  tasks:
+    - name: Install unzip package
+      apt:
+        name: unzip
+        state: latest
+    - name: Install terraform package
+      unarchive: 
+        src: https://releases.hashicorp.com/terraform/1.8.4/terraform_1.8.4_linux_386.zip
+        dest: /usr/local/bin
+        remote_src: true
+        owner: root
+        group: root
+        mode: 0755
+
