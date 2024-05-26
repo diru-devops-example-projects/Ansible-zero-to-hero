@@ -1,12 +1,12 @@
 [web_servers]
-192.168.111.128 	ansible_user=diru-server-1
-192.168.111.132		ansible_user=diru-server-4
+192.168.111.128 
+192.168.111.132
 
 [db_servers]
-192.168.111.129 	ansible_user=diru-server-2
+192.168.111.129
 
 [file_servers]
-192.168.111.130		ansible_user=diru-server-3
+192.168.111.130
 
 [workstation]
-192.168.111.130		ansible_user=diru-server-3
+192.168.111.130
