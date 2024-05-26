@@ -28,7 +28,7 @@
                   user: simone
                   key: "{{ lookup('file', '/home/dirudeen22/.ssh/ansible.pub') }}"
 
-   - hosts: web_servers
+- hosts: web_servers
   become: true
   tasks:
     - name: Install apache and php (Ubunut) 
