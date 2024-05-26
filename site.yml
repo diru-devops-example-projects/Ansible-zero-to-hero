@@ -39,6 +39,32 @@
         state: latest
       when: ansible_distribution == "CentOS" 
 
+    - name: start httpd service (CentOS)
+      tags: apache,httpd,centos
+      service:
+        name: httpd
+        state: started
+        enabled: true 
+      when: ansible_distribution == "CentOS" 
+
+    - name: Change admin server email in httpd config file
+      tags: apache,centos,httpd
+      lineinfile:
+              path: /etc/httpd/conf/httpd.conf
+              regexp: '^ServerAdmin'
+              line: ServerAdmin somebody@somedomain.com
+      when: ansible_distribution == "CentOS"
+      register: httpd
+
+
+    - name: restart httpd service
+      tags: apache, centos, httpd
+      service:
+            name: httpd
+            state: restarted
+      when: httpd.changed
+
+
     - name: Copy the default index to site
       tags: apache,apache2,httpd
       copy:
