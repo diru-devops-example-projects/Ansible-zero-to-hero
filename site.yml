@@ -18,6 +18,32 @@
         update_cache: true
       when: ansible_distribution == "Ubuntu"
 
+
+- hosts: all
+  become: true
+  tasks:
+    - name: Create user simone
+      tags: always
+      user:
+        name: simone
+        group: root
+        comment: simone is the ansible user
+
+    - name: Set authorized key for simone
+      tags: always
+      authorized_key:
+                  user: simone
+                  key: "{{ lookup('file', '/home/dirudeen22/.ssh/ansible.pub') }}"
+
+    - name: Add sudoers file for simone
+      tags: always
+      copy:
+        src: sudoer_simone
+        dest: /etc/sudoers.d/simone
+        owner: root
+        group: root
+        mode: 0440
+
 - hosts: web_servers
   become: true
   tasks:
@@ -56,14 +82,12 @@
       when: ansible_distribution == "CentOS"
       register: httpd
 
-
     - name: restart httpd service
       tags: apache, centos, httpd
       service:
             name: httpd
             state: restarted
       when: httpd.changed
-
 
     - name: Copy the default index to site
       tags: apache,apache2,httpd
@@ -92,6 +116,7 @@
         state: latest
       when: ansible_distribution == "Ubuntu" 
  
+
 - hosts: file_servers
   become: true
   tasks:
@@ -100,6 +125,7 @@
       package:
           name: samba
           state: latest 
+
 
 - hosts: workstation
   become: true
