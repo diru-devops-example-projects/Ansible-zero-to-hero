@@ -39,6 +39,16 @@
         state: latest
       when: ansible_distribution == "CentOS" 
 
+    - name: Copy the default index to site
+      tags: apache,apache2,httpd
+      copy:
+        src: default_index.html
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: 0644      
+ 
+
 - hosts: db_servers
   become: true
   tasks:
@@ -55,7 +65,7 @@
         name: mariadb-server
         state: latest
       when: ansible_distribution == "Ubuntu" 
-
+ 
 - hosts: file_servers
   become: true
   tasks:
