@@ -1,28 +1,18 @@
-- name: Install apache and php (Ubunut)
-  tags: apache,apache2,ubuntu
-  apt:
+- name: Install apache and php 
+  tags: apache,apache2,httpd
+  package:
     name:
-     - apache2
-     - libapache2-mod-php
+     - "{{ apache_package_name }}"
+     - "{{ php_package_name }}"
     state: latest
-  when: ansible_distribution == "Ubuntu"
 
-- name: Install apache and php (CentOS)
-  tags: apache,httpd,centos
-  dnf:
-    name:
-     - httpd
-     - php
-    state: latest
-  when: ansible_distribution == "CentOS"
 
-- name: start httpd service (CentOS)
-  tags: apache,httpd,centos
+- name: Start and enable apache service 
+  tags: apache,httpd,apache2
   service:
-     name: httpd
+     name: "{{ apache_service }}" 
      state: started
      enabled: true
-  when: ansible_distribution == "CentOS"
 
 - name: Change admin server email in httpd config file
   tags: apache,centos,httpd
@@ -31,14 +21,14 @@
         regexp: '^ServerAdmin'
         line: ServerAdmin somebody@somedomain.com
   when: ansible_distribution == "CentOS"
-  register: httpd
+  register: apache
 
-- name: restart httpd service
-  tags: apache, centos, httpd
+- name: Restart apache service
+  tags: apache,centos,httpd
   service:
-        name: httpd
+        name: "{{ apache_service }}"
         state: restarted
-  when: httpd.changed
+  when: apache.changed
 
 - name: Copy the default index to site
   tags: apache,apache2,httpd
