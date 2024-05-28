@@ -1,5 +1,15 @@
 - name: Set authorized key for simone
   tags: always
   authorized_key:
-               user: simone
-               key: "{{ lookup('file', '/home/dirudeen22/.ssh/ansible.pub') }}"
+              user: simone
+              key: "{{ lookup('file', '/home/dirudeen22/.ssh/ansible.pub') }}"
+
+- name: Generate sshd_config from template
+  tags: ssh
+  template:
+    src: "{{ ssh_template_file }}"
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart_ssh
