@@ -21,109 +21,24 @@
 
 - hosts: all
   become: true
-  tasks:
-    - name: Set authorized key for simone
-      tags: always
-      authorized_key:
-                  user: simone
-                  key: "{{ lookup('file', '/home/dirudeen22/.ssh/ansible.pub') }}"
-
+  roles:
+    - base
 - hosts: web_servers
   become: true
-  tasks:
-    - name: Install apache and php (Ubunut) 
-      tags: apache,apache2,ubuntu
-      apt:
-        name:
-          - apache2
-          - libapache2-mod-php 
-        state: latest
-      when: ansible_distribution == "Ubuntu"
-
-    - name: Install apache and php (CentOS)
-      tags: apache,httpd,centos
-      dnf:
-        name:
-         - httpd
-         - php
-        state: latest
-      when: ansible_distribution == "CentOS" 
-
-    - name: start httpd service (CentOS)
-      tags: apache,httpd,centos
-      service:
-        name: httpd
-        state: started
-        enabled: true 
-      when: ansible_distribution == "CentOS" 
-
-    - name: Change admin server email in httpd config file
-      tags: apache,centos,httpd
-      lineinfile:
-              path: /etc/httpd/conf/httpd.conf
-              regexp: '^ServerAdmin'
-              line: ServerAdmin somebody@somedomain.com
-      when: ansible_distribution == "CentOS"
-      register: httpd
-
-    - name: restart httpd service
-      tags: apache, centos, httpd
-      service:
-            name: httpd
-            state: restarted
-      when: httpd.changed
-
-    - name: Copy the default index to site
-      tags: apache,apache2,httpd
-      copy:
-        src: default_index.html
-        dest: /var/www/html/index.html
-        owner: root
-        group: root
-        mode: 0644      
- 
+  roles:
+    - web_servers
 
 - hosts: db_servers
   become: true
-  tasks:
-    - name: Install mariadb (CentOS)
-      tags: db,mariadb,centos
-      dnf:
-        name: mariadb
-        state: latest
-      when: ansible_distribution == "CentOS" 
-
-    - name: Install mariadb (Ubuntu)
-      tags: db,mariadb,ubuntu
-      apt:
-        name: mariadb-server
-        state: latest
-      when: ansible_distribution == "Ubuntu" 
- 
+  roles:
+    - db_servers
 
 - hosts: file_servers
   become: true
-  tasks:
-    - name: Install samba package
-      tags: samba,file
-      package:
-          name: samba
-          state: latest 
+  roles: 
+    - file_servers
 
-
-- hosts: workstation
+- hosts: workstations
   become: true
-  tasks:
-    - name: Install unzip package
-      apt:
-        name: unzip
-        state: latest
-    - name: Install terraform package
-      unarchive: 
-        src: https://releases.hashicorp.com/terraform/1.8.4/terraform_1.8.4_linux_386.zip
-        dest: /usr/local/bin
-        remote_src: true
-        owner: root
-        group: root
-        mode: 0755
-
+  roles:
+    - workstations
